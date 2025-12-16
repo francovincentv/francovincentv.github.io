@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doculite | Salesforce Document Automation with Intelligent Email</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --salesforce-blue: #00a1e0;
+            --salesforce-dark: #032d60;
+            --salesforce-light: #eaf5fe;
+            --email-orange: #ff6b35;
+            --success-green: #4bca81;
+            --warning-yellow: #ffb75d;
+            --tech-purple: #7b68ee;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #939393;
+            --gray-light: #f3f3f3;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-strong: 0 10px 30px rgba(0, 161, 224, 0.15);
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--salesforce-dark);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--salesforce-blue);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--salesforce-blue);
+        }
+
+        .cta-button {
+            background-color: var(--salesforce-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .cta-button i {
+            margin-right: 8px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--salesforce-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--dark);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 180px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-tagline {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--salesforce-dark);
+        }
+
+        .tagline-part {
+            display: block;
+        }
+
+        .tagline-part:nth-child(2) {
+            color: var(--salesforce-blue);
+        }
+
+        .hero-subheadline {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 2.5rem;
+            max-width: 90%;
+        }
+
+        /* Benefit Items */
+        .hero-benefits {
+            margin-bottom: 3rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .benefit-item .icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+            color: var(--salesforce-blue);
+        }
+
+        .benefit-item:nth-child(2) .icon {
+            color: var(--email-orange);
+        }
+
+        .benefit-item:nth-child(3) .icon {
+            color: var(--success-green);
+        }
+
+        /* CTA Buttons */
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-button.primary {
+            background-color: var(--salesforce-blue);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+        }
+
+        .cta-button.secondary {
+            background-color: white;
+            color: var(--salesforce-dark);
+            border: 2px solid var(--salesforce-blue);
+            text-decoration: none;
+            padding: 16px 32px;
+        }
+
+        .cta-button.secondary:hover {
+            background-color: var(--salesforce-light);
+        }
+
+        /* Trust Indicator */
+        .hero-trust {
+            font-size: 0.95rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Visual Placeholder */
+        .hero-visual {
+            flex: 1;
+            position: relative;
+            height: 400px;
+            max-width: 500px;
+        }
+
+        .visual-placeholder {
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+        .visual-card {
+            position: absolute;
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-strong);
+            border: 1px solid #e1f5fe;
+            animation: float 3s ease-in-out infinite;
+            width: 180px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .visual-card:nth-child(1) {
+            top: 20px;
+            left: 0;
+            animation-delay: 0s;
+            border-top: 4px solid var(--salesforce-blue);
+        }
+
+        .visual-card:nth-child(2) {
+            top: 100px;
+            right: 30px;
+            animation-delay: 0.2s;
+            border-top: 4px solid var(--email-orange);
+        }
+
+        .visual-card:nth-child(3) {
+            bottom: 100px;
+            left: 40px;
+            animation-delay: 0.4s;
+            border-top: 4px solid var(--success-green);
+        }
+
+        .visual-card:nth-child(4) {
+            bottom: 20px;
+            right: 0;
+            animation-delay: 0.6s;
+            border-top: 4px solid var(--warning-yellow);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* CORE TECHNOLOGY SECTION - NEW */
+        .core-technology {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f9fafe 0%, #f5f7ff 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--salesforce-dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 60px;
+            font-size: 1.1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .tech-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            text-align: center;
+            border-top: 4px solid var(--tech-purple);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card:nth-child(2) {
+            border-top-color: var(--salesforce-blue);
+        }
+
+        .tech-card:nth-child(3) {
+            border-top-color: var(--success-green);
+        }
+
+        .tech-card:nth-child(4) {
+            border-top-color: var(--email-orange);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .tech-icon {
+            font-size: 48px;
+            margin-bottom: 25px;
+            color: var(--tech-purple);
+        }
+
+        .tech-card:nth-child(2) .tech-icon {
+            color: var(--salesforce-blue);
+        }
+
+        .tech-card:nth-child(3) .tech-icon {
+            color: var(--success-green);
+        }
+
+        .tech-card:nth-child(4) .tech-icon {
+            color: var(--email-orange);
+        }
+
+        .tech-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--salesforce-light);
+            color: var(--salesforce-dark);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Full Spectrum Automation Section */
+        .automation-spectrum {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .automation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .automation-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            border-top: 4px solid var(--salesforce-blue);
+        }
+
+        .automation-card.scheduled {
+            border-top-color: var(--success-green);
+        }
+
+        .automation-card.user-driven {
+            border-top-color: var(--email-orange);
+        }
+
+        .automation-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .automation-icon {
+            font-size: 48px;
+            margin-bottom: 25px;
+            color: var(--salesforce-blue);
+        }
+
+        .automation-card.scheduled .automation-icon {
+            color: var(--success-green);
+        }
+
+        .automation-card.user-driven .automation-icon {
+            color: var(--email-orange);
+        }
+
+        /* Salesforce Integration Section */
+        .salesforce-integration {
+            padding: 100px 0;
+            background-color: #f9fafe;
+        }
+
+        .integration-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+        }
+
+        .integration-content {
+            flex: 1;
+        }
+
+        .integration-visual {
+            flex: 1;
+            text-align: center;
+        }
+
+        .integration-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--salesforce-light);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: var(--salesforce-dark);
+        }
+
+        .integration-badge i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: var(--salesforce-blue);
+        }
+
+        /* Email Automation Section */
+        .email-automation {
+            padding: 100px 0;
+            background-color: #fff8f5;
+        }
+
+        .email-workflow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .workflow-step {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .workflow-arrow {
+            font-size: 24px;
+            color: var(--salesforce-blue);
+        }
+
+        .workflow-icon {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow);
+            font-size: 32px;
+            color: var(--salesforce-blue);
+        }
+
+        .workflow-icon.email {
+            color: var(--email-orange);
+            background-color: #fff8f5;
+        }
+
+        /* AppExchange Section */
+        .appexchange {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f5faff 0%, #eaf5fe 100%);
+            text-align: center;
+        }
+
+        .appexchange-container {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 50px;
+            box-shadow: var(--shadow);
+            max-width: 900px;
+            margin: 0 auto;
+            border: 2px solid var(--salesforce-blue);
+        }
+
+        .appexchange-badge {
+            background-color: var(--salesforce-dark);
+            color: white;
+            padding: 15px 30px;
+            border-radius: var(--radius);
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .appexchange-badge i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .rating {
+            color: var(--warning-yellow);
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 100px 0;
+            background-color: #f9fafe;
+        }
+
+        .pricing-cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            width: 300px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .pricing-card.featured {
+            transform: scale(1.05);
+            border-top: 5px solid var(--salesforce-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--salesforce-blue);
+            color: white;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--salesforce-dark);
+            margin: 20px 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--salesforce-dark);
+            color: white;
+            padding: 80px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 15px;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .hero-tagline {
+                font-size: 2.8rem;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .workflow-arrow {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .email-workflow {
+                flex-direction: column;
+            }
+            
+            .integration-container {
+                flex-direction: column;
+            }
+            
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 150px 0 80px;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+            }
+            
+            .hero-subheadline {
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .hero-benefits {
+                text-align: left;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .hero-visual {
+                max-width: 100%;
+                height: 300px;
+                margin-top: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                display: none;
+                width: 100%;
+                order: 3;
+                margin-top: 20px;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-tagline {
+                font-size: 2.2rem;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tech-grid, .automation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .appexchange-container {
+                padding: 30px 20px;
+            }
+            
+            .visual-card {
+                width: 140px;
+                padding: 15px;
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-file-alt"></i> Doculite
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#technology">Core Technology</a></li>
+                    <li><a href="#automation">Automation</a></li>
+                    <li><a href="#email">Email</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                </ul>
+            </nav>
+            <button class="cta-button">
+                <i class="fab fa-salesforce"></i> Get on AppExchange
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="hero-content fade-in">
+                <!-- Main Sophisticated Tagline -->
+                <h1 class="hero-tagline">
+                    <span class="tagline-part">Automated Documents.</span>
+                    <span class="tagline-part">Intelligent Email.</span>
+                    <span class="tagline-part">Unified in Salesforce.</span>
+                </h1>
+                
+                <!-- Supporting Headline: Highlights Full-Spectrum Automation -->
+                <!-- In your existing hero section, replace the current .hero-subheadline paragraph with: -->
+<p class="hero-subheadline">
+    Transform Salesforce data into dynamic documents with drag-and-drop simplicity. 
+    Enrich with external data, automate delivery, and pair every document with an intelligent email template.
+</p>
+                
+                <!-- Key Benefit Bullets -->
+                <div class="hero-benefits">
+                    <div class="benefit-item">
+                        <i class="icon fas fa-cogs"></i>
+                        <span><strong>Event & Schedule-Based:</strong> Set rules to trigger on data changes, dates, or milestones.</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="icon fas fa-bolt"></i>
+                        <span><strong>User-Driven Actions:</strong> Generate and send from any record with a customizable button.</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="icon fas fa-brain"></i>
+                        <span><strong>AI-Enhanced Delivery:</strong> Pair dynamic documents with context-aware email templates.</span>
+                    </div>
+                </div>
+                
+                <!-- Primary Call-to-Action Buttons -->
+                <div class="hero-cta">
+                    <a href="#technology" class="cta-button primary">
+                        <i class="fas fa-play-circle"></i> Explore Core Technology
+                    </a>
+                    <a href="#appexchange" class="cta-button secondary">
+                        <i class="fab fa-salesforce"></i> Install from AppExchange
+                    </a>
+                </div>
+                
+                <!-- Trust Indicator -->
+                <p class="hero-trust">
+                    <i class="fas fa-check-circle"></i> Native Salesforce AppExchange Product | Trusted by 5,000+ Orgs
+                </p>
+            </div>
+            
+            <!-- Visual Element -->
+            <div class="hero-visual fade-in">
+                <div class="visual-placeholder">
+                    <div class="visual-card">📄 Document Template</div>
+                    <div class="visual-card">🔄 Scheduled Trigger</div>
+                    <div class="visual-card">✉️ Intelligent Email</div>
+                    <div class="visual-card">📈 Analytics Dashboard</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE TECHNOLOGY SECTION - NEW -->
+    <section class="core-technology" id="technology">
+        <div class="container">
+            <h2 class="section-title">Powerful Core Technology</h2>
+            <p class="section-subtitle">Built on sophisticated document automation technology designed specifically for enterprise Salesforce environments</p>
+            
+            <div class="tech-grid">
+                <!-- Drag & Drop Document Creation -->
+                <div class="tech-card fade-in">
+                    <div class="tech-badge">Visual Builder</div>
+                    <div class="tech-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>Drag & Drop Document Creation</h3>
+                    <p>Intuitive visual editor that allows anyone to create professional document templates without coding. Drag fields, elements, and components directly onto the canvas.</p>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> WYSIWYG Editor</span>
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> Live Preview</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- External Data Source Connectivity -->
+                <div class="tech-card fade-in">
+                    <div class="tech-badge">Data Integration</div>
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>External Data Source Connectivity</h3>
+                    <p>Connect to APIs, databases, spreadsheets, and external services to pull live data directly into your documents. Enrich Salesforce records with external information.</p>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> REST/SOAP APIs</span>
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> SQL Databases</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- MuleSoft Plugin -->
+                <div class="tech-card fade-in">
+                    <div class="tech-badge">Enterprise Integration</div>
+                    <div class="tech-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>MuleSoft Plugin for Seamless Integration</h3>
+                    <p>Dedicated MuleSoft plugin for enterprise-grade connectivity. Connect Salesforce to legacy systems, databases, and external APIs with pre-built connectors.</p>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> Pre-built Connectors</span>
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> Enterprise Patterns</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Smart Data Sets -->
+                <div class="tech-card fade-in">
+                    <div class="tech-badge">Intelligence Engine</div>
+                    <div class="tech-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Smart Data Sets for Aggregate Results</h3>
+                    <p>Aggregate and transform data from multiple sources to create intelligent datasets. Perform calculations, apply business rules, and generate insights automatically.</p>
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> Data Aggregation</span>
+                            <span><i class="fas fa-check" style="color: var(--success-green);"></i> Business Rules Engine</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 60px;">
+                <a href="#automation" class="cta-button primary">
+                    <i class="fas fa-arrow-right"></i> See How These Technologies Power Automation
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Spectrum Automation Section -->
+    <section class="automation-spectrum" id="automation">
+        <div class="container">
+            <h2 class="section-title">Full-Spectrum Automation</h2>
+            <p class="section-subtitle">From intelligent, scheduled workflows to instant user-driven actions—complete control over your document delivery.</p>
+            
+            <div class="automation-grid">
+                <div class="automation-card scheduled fade-in">
+                    <div class="automation-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Scheduled & Event-Based</h3>
+                    <p>Set intelligent rules that trigger automatically based on data changes, dates, or business milestones. Perfect for recurring reports, renewal notices, and milestone-based document generation.</p>
+                    <ul style="text-align: left; margin-top: 20px; list-style: none;">
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Time-based scheduling</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Data change triggers</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Milestone automation</li>
+                    </ul>
+                </div>
+                
+                <div class="automation-card user-driven fade-in">
+                    <div class="automation-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>User-Driven Actions</h3>
+                    <p>Launch complete document-and-email sequences instantly with a single click from any Salesforce record. Maintain control for one-off requests, exceptions, or on-demand generation.</p>
+                    <ul style="text-align: left; margin-top: 20px; list-style: none;">
+                        <li><i class="fas fa-check" style="color: var(--email-orange);"></i> Custom Salesforce buttons</li>
+                        <li><i class="fas fa-check" style="color: var(--email-orange);"></i> One-click generation</li>
+                        <li><i class="fas fa-check" style="color: var(--email-orange);"></i> Real-time preview</li>
+                    </ul>
+                </div>
+                
+                <div class="automation-card fade-in">
+                    <div class="automation-icon">
+                        <i class="fas fa-random"></i>
+                    </div>
+                    <h3>Hybrid Workflows</h3>
+                    <p>Combine both approaches for maximum flexibility. Set up automated baseline processes with the option for manual overrides or user-initiated steps at any point in the workflow.</p>
+                    <ul style="text-align: left; margin-top: 20px; list-style: none;">
+                        <li><i class="fas fa-check" style="color: var(--salesforce-blue);"></i> Automated with manual overrides</li>
+                        <li><i class="fas fa-check" style="color: var(--salesforce-blue);"></i> Approval step integration</li>
+                        <li><i class="fas fa-check" style="color: var(--salesforce-blue);"></i> Conditional branching</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Email Automation Section -->
+    <section class="email-automation" id="email">
+        <div class="container">
+            <h2 class="section-title">Intelligent Email Template Automation</h2>
+            <p class="section-subtitle">Every document template comes with a paired email template for complete, personalized delivery automation.</p>
+            
+            <div class="email-workflow">
+                <div class="workflow-step fade-in">
+                    <div class="workflow-icon">
+                        <i class="fab fa-salesforce"></i>
+                    </div>
+                    <h3>1. Salesforce Data</h3>
+                    <p>Data is pulled from Salesforce records (Accounts, Contacts, Opportunities, etc.)</p>
+                </div>
+                
+                <div class="workflow-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                
+                <div class="workflow-step fade-in">
+                    <div class="workflow-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>2. Document Generation</h3>
+                    <p>Documents are automatically generated using your template designs</p>
+                </div>
+                
+                <div class="workflow-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                
+                <div class="workflow-step fade-in">
+                    <div class="workflow-icon email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>3. Email Assembly</h3>
+                    <p>Personalized emails are created using paired email templates</p>
+                </div>
+                
+                <div class="workflow-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                
+                <div class="workflow-step fade-in">
+                    <div class="workflow-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <h3>4. Automated Delivery</h3>
+                    <p>Documents are attached and emails are sent automatically to recipients</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="#demo" class="cta-button primary">
+                    <i class="fas fa-envelope"></i> See Email Automation in Action
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Salesforce Integration Section -->
+    <section class="salesforce-integration" id="salesforce">
+        <div class="container">
+            <div class="integration-container">
+                <div class="integration-content fade-in">
+                    <div class="integration-badge">
+                        <i class="fab fa-salesforce"></i> Native Salesforce Integration
+                    </div>
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 30px;">Built for the Salesforce Ecosystem</h2>
+                    <p style="font-size: 1.1rem; margin-bottom: 30px; color: #555;">Doculite works entirely within your Salesforce environment, respecting all security models, data structures, and business processes.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px;">
+                        <div>
+                            <h4 style="color: var(--salesforce-dark); margin-bottom: 10px;"><i class="fas fa-shield-alt" style="color: var(--salesforce-blue); margin-right: 8px;"></i> Security & Compliance</h4>
+                            <p style="font-size: 0.95rem;">Inherits Salesforce CRUD/FLS permissions and sharing rules.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--salesforce-dark); margin-bottom: 10px;"><i class="fas fa-plug" style="color: var(--salesforce-blue); margin-right: 8px;"></i> MuleSoft Ready</h4>
+                            <p style="font-size: 0.95rem;">Enhanced integration capabilities for enterprise connectivity.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--salesforce-dark); margin-bottom: 10px;"><i class="fas fa-cogs" style="color: var(--salesforce-blue); margin-right: 8px;"></i> Process Builder</h4>
+                            <p style="font-size: 0.95rem;">Seamless integration with Salesforce automation tools.</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--salesforce-dark); margin-bottom: 10px;"><i class="fas fa-database" style="color: var(--salesforce-blue); margin-right: 8px;"></i> All Objects</h4>
+                            <p style="font-size: 0.95rem;">Works with standard and custom Salesforce objects.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="integration-visual fade-in">
+                    <div style="background-color: var(--salesforce-light); padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow);">
+                        <h3 style="color: var(--salesforce-dark); margin-bottom: 20px;">Salesforce Data Sources</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="background: white; padding: 15px; border-radius: var(--radius); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                <i class="fas fa-user-tie" style="color: var(--salesforce-blue); font-size: 24px; margin-bottom: 10px;"></i>
+                                <div>Accounts & Contacts</div>
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: var(--radius); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                <i class="fas fa-chart-line" style="color: var(--salesforce-blue); font-size: 24px; margin-bottom: 10px;"></i>
+                                <div>Opportunities</div>
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: var(--radius); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                <i class="fas fa-file-contract" style="color: var(--salesforce-blue); font-size: 24px; margin-bottom: 10px;"></i>
+                                <div>Contracts</div>
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: var(--radius); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                                <i class="fas fa-cogs" style="color: var(--salesforce-blue); font-size: 24px; margin-bottom: 10px;"></i>
+                                <div>Custom Objects</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AppExchange Section -->
+    <section class="appexchange" id="appexchange">
+        <div class="container">
+            <h2 class="section-title">Available on Salesforce AppExchange</h2>
+            <p class="section-subtitle">The trusted marketplace for Salesforce apps</p>
+            
+            <div class="appexchange-container fade-in">
+                <div class="appexchange-badge">
+                    <i class="fab fa-salesforce"></i> Salesforce AppExchange
+                </div>
+                
+                <h3 style="color: var(--salesforce-dark); margin-bottom: 20px;">Certified Salesforce AppExchange Product</h3>
+                
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span style="color: var(--dark); margin-left: 10px; font-size: 1.1rem;">4.7/5 from 247 reviews</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 40px 0;">
+                    <div style="text-align: center; padding: 20px; background-color: var(--salesforce-light); border-radius: var(--radius);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--salesforce-blue);">5,000+</div>
+                        <div style="font-weight: 600; color: var(--salesforce-dark);">Salesforce Orgs</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background-color: var(--salesforce-light); border-radius: var(--radius);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--email-orange);">87%</div>
+                        <div style="font-weight: 600; color: var(--salesforce-dark);">Faster Document Delivery</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background-color: var(--salesforce-light); border-radius: var(--radius);">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--salesforce-blue);">24/7</div>
+                        <div style="font-weight: 600; color: var(--salesforce-dark);">Salesforce Support</div>
+                    </div>
+                </div>
+                
+                <p style="margin: 30px 0; font-size: 1.1rem;">As an AppExchange product, Doculite meets Salesforce's security review standards, ensuring your data is protected and the integration is reliable.</p>
+                
+                <a href="#pricing" class="cta-button primary" style="margin-top: 20px;">
+                    <i class="fab fa-salesforce"></i> View Pricing & Install
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Salesforce-Focused Pricing</h2>
+            <p class="section-subtitle">Simple pricing based on your Salesforce edition and needs</p>
+            
+            <div class="pricing-cards">
+                <div class="pricing-card fade-in">
+                    <h3>Professional</h3>
+                    <div class="price">$59<span>/user/month</span></div>
+                    <p>For Salesforce Professional Edition customers</p>
+                    <ul style="text-align: left; margin: 20px 0; list-style: none;">
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Up to 500 documents/month</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Standard Salesforce Objects</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Basic Email Templates</li>
+                        <li><i class="fas fa-times" style="color: var(--gray);"></i> Scheduled Automation Only</li>
+                        <li><i class="fas fa-times" style="color: var(--gray);"></i> Standard Support</li>
+                    </ul>
+                    <a href="#" class="cta-button secondary" style="width: 100%; text-align: center; justify-content: center;">Get Started</a>
+                </div>
+                
+                <div class="pricing-card featured fade-in">
+                    <div class="featured-badge">BEST VALUE</div>
+                    <h3>Enterprise</h3>
+                    <div class="price">$89<span>/user/month</span></div>
+                    <p>For Salesforce Enterprise & Unlimited Edition</p>
+                    <ul style="text-align: left; margin: 20px 0; list-style: none;">
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> All Core Technology Features</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Full-Spectrum Automation</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Intelligent Email Templates</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> MuleSoft Integration</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Smart Data Sets</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Premium Support</li>
+                    </ul>
+                    <a href="#" class="cta-button primary" style="width: 100%; text-align: center; justify-content: center;">
+                        <i class="fab fa-salesforce"></i> Try Free for 30 Days
+                    </a>
+                </div>
+                
+                <div class="pricing-card fade-in">
+                    <h3>Developer</h3>
+                    <div class="price">Free</div>
+                    <p>For Sandbox & Developer Editions</p>
+                    <ul style="text-align: left; margin: 20px 0; list-style: none;">
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Up to 50 documents/month</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Standard Objects Only</li>
+                        <li><i class="fas fa-check" style="color: var(--success-green);"></i> Template Designer</li>
+                        <li><i class="fas fa-times" style="color: var(--gray);"></i> No Production Use</li>
+                        <li><i class="fas fa-times" style="color: var(--gray);"></i> Community Support</li>
+                    </ul>
+                    <a href="#" class="cta-button secondary" style="width: 100%; text-align: center; justify-content: center;">Get Developer Edition</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3><i class="fas fa-file-alt"></i> Doculite</h3>
+                    <p>Automated Documents. Intelligent Email. Unified in Salesforce.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="#" style="color: white; margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-salesforce"></i></a>
+                        <a href="#" style="color: white; margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: white; margin-right: 15px; font-size: 1.2rem;"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#technology">Core Technology</a></li>
+                        <li><a href="#automation">Automation</a></li>
+                        <li><a href="#email">Email Templates</a></li>
+                        <li><a href="#salesforce">Salesforce Integration</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Implementation Guide</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p><i class="fab fa-salesforce"></i> Doculite is a registered Salesforce AppExchange product. Salesforce and AppExchange are trademarks of salesforce.com, inc.</p>
+                <p>&copy; 2023 Doculite. All rights reserved. | Automated Documents. Intelligent Email. Unified in Salesforce.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            mobileMenuBtn.innerHTML = mainNav.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+        
+        // Set initial state for fade elements
+        fadeElements.forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        });
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        // Initial check
+        fadeInOnScroll();
+
+        // CTA Button Actions
+        document.querySelectorAll('.cta-button').forEach(button => {
+            if (button.getAttribute('href') === '#') {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert("Thank you for your interest in Doculite! This would navigate to the appropriate page in a live environment.");
+                });
+            }
+        });
+    </script>
+</body>
+</html>
